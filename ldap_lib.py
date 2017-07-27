@@ -31,7 +31,7 @@ class ldap_conn(object):
     """
     # target is either "leuven" or "vsc"
     self.target = target
-    self.conf_file = 'private.conf'
+    self.conf_file = os.path.dirname(__file__) + '/private.conf'
     self.set_connection_phrases()
 
     # Set the search scope to entire subtree
@@ -64,7 +64,7 @@ class ldap_conn(object):
     - cred: /apps/leuven/icts/cgi.passwd
     """ 
     target = self.target
-    dic = _read(conf=self.conf_file)
+    dic = self._read_config_file()
    
     # The LDAP configs sit in the following file: 
     # taken from "less $VSC_CONF"
@@ -83,22 +83,21 @@ class ldap_conn(object):
       sys.exit(1)
 
   #------------------------------------
-  def _read(conf):
+  def _read_config_file(self):
     """ 
     Read the private configure file 
-    @param conf: the input configuration file which is stored locally and privately 
-    @type conf: str
     @return: the connection configurations for the KULeuven and VSC LDAPs.
     @rtype: dict
     """
-    if not os.path.exists(conf):
-      logger.error('_read: Could not find the config file {0}'.format(conf))
+    if not os.path.exists(self.conf_file):
+      logger.error('_read_config_file: Could not find the config file {0}'.format(self.conf_file))
       sys.exit(1)  
     dic = dict()
-    with open(conf, 'r') as r: lines = r.readlines()
+    with open(self.conf_file, 'r') as r: lines = r.readlines()
     for line in lines:
       row = line.rstrip('\r\n').split()
       key, val = row[0], row[-1]
+      if val == 'None': val = ''
       dic[key] = val
     
     return dic 
