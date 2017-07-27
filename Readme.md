@@ -9,11 +9,11 @@ This Python module provides basic Python facilities to talk to the local LDAP an
 ## Example
 As a demonstration, to retireve the list of all KULeuven users, we do the following
 
-  # Get all active users
-  vsc = 'vsc'
-  search_string = '(&(status=active) (institute=leuven))'
-  
 ```python
+# Get all active users
+vsc = 'vsc'
+search_string = '(&(status=active) (institute=leuven))'
+  
 with ldap_lib.ldap_conn(vsc) as lc:
   res = lc.search(search_string)
   n_users = len(res)
@@ -24,4 +24,15 @@ with ldap_lib.ldap_conn(vsc) as lc:
 
   # Get a specific user info
   myself = lc.get_user_info('vsc30745')
+```
+
+Another example is to retrieve the information for a specific user from the KULeuven LDAP, knowing the user's name
+
+```python
+kuleuven = 'kuleuven'
+search_string = '(uid=u0012345)'
+with ldap_lib.ldap_conn(kuleuven) as lc:
+  res = lc.search(search_string)
+  dic = res[0][1]
+  for key, val in dic.iteritems(): print key, val
 ```
