@@ -36,3 +36,6 @@ with ldap_lib.ldap_conn(kuleuven) as lc:
   dic = res[0][1]
   for key, val in dic.iteritems(): print key, val
 ```
+
+## Dependencies
++ Python-LDAP (https://www.python-ldap.org/)
