@@ -29,7 +29,7 @@ class ldap_conn(object):
     Many of the connection arguments/options that are needed for a secure binding are
     hardcoded as attributes of the class, e.g. uri, who, cred, etc. 
     """
-    # target is either "leuven" or "vsc"
+    # target is either "leuven", "leuven_private"  or "vsc"
     self.target = target
     self.conf_file = os.path.dirname(__file__) + '/private.conf'
     self.set_connection_phrases()
@@ -73,6 +73,11 @@ class ldap_conn(object):
       self.base = dic['kul_base']
       self.who  = dic['kul_who']
       self.cred  = dic['kul_cred']
+    elif target == 'kuleuven_private':
+      self.uri = dic['kul_priv_uri']
+      self.base = dic['kul_priv_base']
+      self.who = dic['kul_priv_who']
+      self.cred = dic['kul_priv_cred']
     elif target == 'vsc':
       self.uri   = dic['vsc_uri']
       self.base = dic['vsc_base']
@@ -151,6 +156,13 @@ class ldap_conn(object):
       self.conn.protocol_version = ldap.VERSION3
       self.conn.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
       self.conn.set_option(ldap.OPT_X_TLS_NEWCTX, 0)
+
+      if self.target == 'kuleuven_private':
+        dic = self._read_config_file()
+        self.conn.set_option(ldap.OPT_X_TLS_CACERTDIR, dic['TLS_CACERTDIR'])
+        self.conn.set_option(ldap.OPT_X_TLS_CACERTFILE, dic['TLS_CACERT'])
+        self.conn.set_option(ldap.OPT_X_SASL_NOCANON, 1)
+
       self.is_initialized = True
     except ldap.LDAPError as err:
       self.is_initialized = False
