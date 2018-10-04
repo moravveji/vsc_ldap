@@ -39,7 +39,7 @@ with ldap_lib.ldap_conn(kuleuven) as lc:
 
 ## Specifying Connection Target
 An instance of `ldap_lib.ldap_conn()` requires specifying the `target`. The `target` attribute will determine to which LDAP to connect to; therefore, the following three options are available:
-+ `target=""vsc"` to query the VSC LDAP and retrieve the users information
++ `target="vsc"` to query the VSC LDAP and retrieve the users information
 + `target="kuleuven"` to query the public KULeuven LDAP (u-, r- and s-accounts)
 + `target="kuleuven_private"` to query the private KULeuven LDAP (which includes the above accounts, together with the b-accounts for external users)
 ## Dependencies

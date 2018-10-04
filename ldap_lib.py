@@ -34,8 +34,8 @@ class ldap_conn(object):
     self.conf_file = os.path.dirname(__file__) + '/private.conf'
     self.set_connection_phrases()
 
-    # Set the search scope to entire subtree
-    self.scope = ldap.SCOPE_SUBTREE
+    # Set the search scope to the BASE subtree
+    self.scope = ldap.SCOPE_ONELEVEL # ldap.SCOPE_SUBTREE
 
     # Control flags
     self.is_initialized = False
@@ -203,6 +203,7 @@ class ldap_conn(object):
 
     self.filterstr = filterstr
     self.search_id = self.conn.search(base=self.base, scope=self.scope, filterstr=self.filterstr)
+#    self.search_id = self.conn.search(base=self.base, filterstr=self.filterstr) 
     self._get_result()
 
     return self.result
